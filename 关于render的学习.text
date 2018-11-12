@@ -1,0 +1,83 @@
+在使用render 绑定DOM属性 使用 domProps;
+    例如:img中的src属性
+        a链接中的title属性
+    render: (h,params) => {
+        return h('a',{
+            domProps:{
+                title:params.row.name
+            }
+        },params.row.name)   
+    }
+绑定组件属性使用props;
+
+在render中
+    render: (h, params) => {
+        return h("span", {
+            props:{
+                columns:this.columns,
+            }, 
+            style:{
+                fontSize: '14px'
+            },   
+            class: "demo-spin-icon-load",//1
+            class: "red black" //2 
+            class: {
+                "red" : true,
+                "black" : true
+            }
+            on:{
+                click: () => {
+                    ...
+                }
+            }
+        },params.row.name);
+    }
+注意  这里的style是不加作用域scoped的，如果加了class样式就不生效了
+如果在scoped中使用组件自带的类名可以  .red >>> .demo-spin-icon-load
+
+(需求:在iview中表格on-expand中在放入一个表格,关于对data数组的操作)
+在render中使用 (async:false)
+    在data中:data:{},
+    在render: (h, params) => {
+        $.ajax({
+            async:false,
+            ...
+        })
+        return h('Table',{
+            props:{
+                columns:this.columns,
+                data:this.data[params.row.id]
+            }
+        })
+    }
+
+在使用render中能简写:
+    render: (h, params) => {
+        return h('sapn',params.row) //这里的params.row能直接操作
+    }
+    注:在params.row 直接可以进行操作元素;
+
+在render中嵌套其他元素:
+    render:(h,params)=>{
+     return h('div',
+        {
+            style:{
+                background:'#ccc'
+            }
+         },[
+             h('p','内容2')
+         ],'内容1')
+    }
+
+在render中3层嵌套:
+    render:(h, params) => {
+        return h('div',[
+            h('div',{
+                style:{}
+                },[h('p','内容2')]),
+            h('div',{
+                style:{}
+                },[h('p','内容2')])
+        ])
+}
+
