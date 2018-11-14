@@ -4,7 +4,7 @@
 
 :not(:last-child) 不选择最后一个
 
-在JQ $.ajax提交方式(拼接)可以使用$.parm(data)
+在JQ $.ajax提交方式(拼接)可以使用$.param(data)
 
 在iview中添加enter点击事件
     @keyup.enter.native = 'handleSubmit()'
