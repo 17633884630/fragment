@@ -43,3 +43,138 @@ vue+webpack中动态绑定图片路径的2种方法:
         
 JQ中对于$符号的理解
     $ 实际上就是一个函数 function
+
+在iview开发中使用表格,使用勾选框想点击一行 勾选框勾选 
+    iview 自带的有:
+    this.$refs.selection.toggleSelect(index);
+    需要在table 上设置 ref="selection" (自己设置)
+
+在ivie开发中使用勾选框,当查看,修改数据回填写法;
+    template中:
+    <CheckboxGroup style="display: inline-block;" v-model="serviceThemesIds">
+        <Checkbox  v-for="item in formData.serviceThemes"  :label="item.id"  :key="item.name">{{item.name}}</Checkbox>
+    </CheckboxGroup>
+    data数据:
+    data:{
+        serviceThemesIds:[]
+    }
+    从后端拿的数据进行编译(一)
+    $.each(this.formData.serviceThemes,(i,d)=> {
+        this.serviceThemesIds.push(d.id)
+    });
+    从后端拿的数据进行编译(二)
+    $.each(vThis.req, function(k, v) {
+        if ($.isArray(vThis.req[k])) { //勾选框回填
+            var arr = [];
+            $.each(d.data[k.replace("Id", "")], function(j, m) {
+                arr.push(m.id);
+            });
+            vThis.req[k] = arr;
+        } else if ($.isPlainObject(vThis.req[k])) {
+            vThis.req[k].id = (d.data[k] || { id: null }).id;
+        } else { //单选框回填
+            if ($.type(d.data[k]) === "boolean") {
+                vThis.req[k] = d.data[k] ? 1 : 0;
+            } else {
+                vThis.req[k] = d.data[k];
+            }
+        }
+    });
+
+在vue开发中提交方式为form表单提交(使用axios时)(一);
+    在main.js设置:
+    import qs from 'qs'   //转化
+    import axios from 'axios'
+
+    Vue.prototype.$axios = axios
+    Vue.prototype.$qs = qs
+
+    在请求过程中:
+    var vThis = this;
+    使用(一)(使用插件)
+    vThis.$axios.post(url,
+     vThis.$qs.stringify({
+          name: vThis.name,
+     })
+     ).then(function(response) {});
+     }).catch(() => {})
+    使用(二)(不用插件)
+    var formData = new FormData();
+	formData.append("id", vThis.id);
+    formData.append("name", vThis.name);
+	var config = {
+		headers: {
+		    "Content-Type": "multipart/form-data"
+		}
+	};
+	vThis.$axios.post(url,formData ,config).then(function(response) {});
+
+在vue开发过程中使用ajax请求(封装ajax);
+    在config-dev.env.js中:
+        module.exports = merge(prodEnv, {
+            NODE_ENV: '"development"',
+            TYPE: '"dev"' //新加
+        })
+    在config-prod.env.js中:
+        let type = process.argv.splice(2)[0] || 'prod'; //新加
+        module.exports = {
+            NODE_ENV: '"production"',
+            TYPE: '"'+type+'"' //新加
+        }
+    在src下创建一个global文件夹,新增index.js:
+        const config = {
+            dev: {  //开发环境
+                ip: '', //'localhost'
+                post: '',
+                title: '',
+            },
+            prod: { //测试环境
+                ip: '',
+                post: '',
+                title: '',
+            },
+        };
+    const url = "http://" + config[process.env.TYPE].ip + ":" + config[process.env.TYPE].post + "/网关"
+    const title = config[process.env.TYPE].title
+    export default {
+        getUrl(append) {
+            return url + (append || '');
+        },
+        ajax(type, api, data, callback, jsonUp) {
+            if ($.isFunction(data)) {
+            jsonUp = jsonUp || callback;
+            callback = data;
+            data = undefined;
+            }
+            callback = callback || function (d) {};
+            var option = {
+            type: type,
+            url: url + api,
+            success: callback
+            };
+            if (data) {
+            option.data = data;
+            if (jsonUp) {
+                option.contentType = "application/json";
+                option.data = JSON.stringify(data);
+            }
+            }
+            $.ajax(option);
+        },
+        //使用:
+        get: function (id, callback) {
+            this.ajaxGet('url', {
+            id: id
+            }, callback);
+        },
+        post: function (data, callback) {
+            this.ajaxPost('url', data, callback, true);
+        },
+    }
+    在main.js中引入使用
+        import global from './global'
+        Vue.config.productionTip = false
+        Vue.prototype.$global = global
+    
+
+
