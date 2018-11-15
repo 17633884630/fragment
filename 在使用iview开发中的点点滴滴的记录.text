@@ -25,7 +25,7 @@ vue+webpack中动态绑定图片路径的2种方法:
             data:data
         }
     })
-    取:data = this.$router.query.data
+    取:data = this.$route.query.data
     传:this.$store.state.data = data;
     取:d = atathis.$store.state.data 
     从后台拿到数据之后 {} 不一样可以使用
