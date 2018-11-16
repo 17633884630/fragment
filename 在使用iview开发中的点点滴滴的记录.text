@@ -4,7 +4,7 @@
 
 :not(:last-child) 不选择最后一个
 
-在JQ $.ajax提交方式(拼接)可以使用$.parm(data)
+在JQ $.ajax提交方式(拼接)可以使用$.param(data)
 
 在iview中添加enter点击事件
     @keyup.enter.native = 'handleSubmit()'
@@ -25,9 +25,9 @@ vue+webpack中动态绑定图片路径的2种方法:
             data:data
         }
     })
-    取:data = this.$router.query.data
+    取:data = this.$route.query.data
     传:this.$store.state.data = data;
-    取:d = atathis.$store.state.data 
+    取:data = this.$store.state.data 
     从后台拿到数据之后 {} 不一样可以使用
         $.each(data,()=>{})
     这个数据在其他地方调用 可以采用 {}[] 方式
