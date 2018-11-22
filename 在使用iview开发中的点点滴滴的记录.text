@@ -277,6 +277,26 @@ JQ中对于$符号的理解
         );
     }
 
+在iview表格中实现上移，下移：
+    上移：
+    moveUp(){
+        if(this.selection.length == 1){ //这地方是iview点击事件数组：
+            if(this.index > 0){ //点击那行的index
+            var arr = this.data[this.index - 1]; //this.data是表格数据的数组
+            Vue.set(
+                this.data,
+                this.index - 1,
+                this.data[this.index]
+            );
+            Vue.set(this.data,this.index,arr);
+
+            }
+
+        }else{
+            this.$Message.info("请选择一条数据");
+            return false;
+        }
+    }
 
 
     
