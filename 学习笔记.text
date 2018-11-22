@@ -1,0 +1,4 @@
+1.boolean 数据类型(简单判断 ==true)
+    0  在(==)下为 false
+    1  在(==)下为 true
+    -1 在(==)下为 false
