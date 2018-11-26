@@ -1,0 +1,18 @@
+vuex的核心就是store;
+
+改变store中的状态唯一途径就是显示地提交(commit);
+
+由于vuex的状态存储是相应式的,从store实例中读取状态最简单的方法就是在计算属性中返回某个状态(computed);
+
+当一个组件需要获取多个状态时候,可以使用mapState   ...mapState({})
+
+vuex中getter(可以认为是store的计算属性),getter的返回值会根据它的依赖被缓存起来,且只有当它的依赖值发生了改变才会被重新计算(...mapGetters)
+
+更改vuex的store中的状态的唯一方法是提交(mutation(type,increment))
+
+但是(mutation)不能直接调用,触发为出发一个类型increment的mutation,调用函数要唤醒一个mutation handler,你需要以相应的type调用store.commit方法:mutation都是同步事项
+
+action类似于mutation	
+	action 提交的是mutation,而不是直接变更状态
+	action 可以包含任意异步操作;
+	

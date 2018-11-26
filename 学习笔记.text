@@ -2,3 +2,75 @@
     0  在(==)下为 false
     1  在(==)下为 true
     -1 在(==)下为 false
+2.JavaScript种,一共有两种类型的值:原始值(primitives)和对象值(objects)
+	原始值有:undefined,null,boolean,number,string
+	对象值有:其他的所有值都是对象类型,包括数组(array)和函数(function)
+3.关于localStorage,sessionStorage,Cookie
+	Cookie可设置失效时间
+	localStorage除非被清除,否则永久保存
+	sessionStorage仅在当前会话下有效,关闭页面或浏览器后被清除
+	
+	sessionStorage.setItem('key','name')
+	sessionStorage.getItem('key')
+	sessionStorage.removeItem('key')	删除一个
+	sessionStorage.clear()				清除所有
+	localStorage,localStorage 一样;
+	
+	cookie(js-cookie)
+	创建:
+		//创建简单的cookie
+		Cookies.set('name', 'value');
+		//创建有效期为7天的cookie
+		Cookies.set('name', 'value', { expires: 7 });
+		//为当前页创建有效期7天的cookie
+		Cookies.set('name', 'value', { expires: 7, path: '' });
+	取值:
+		Cookies.get('name'); // => 'value'
+		Cookies.get('nothing'); // => undefined
+		//获取所有cookie
+		Cookies.get(); // => { name: 'value' }
+	删除:
+		Cookies.remove('name');
+		//删除设置路径的值
+		Cookies.remove('name', { path: '' });
+	
+	cookie(vue-cookie)
+	创建:
+		this.$cookie.set('test', 'Hello world!', 1);
+	取值:
+		this.$cookie.get('test');
+	删除:
+		this.$cookie.delete('test');
+	
+	怎么在缓存种存对象
+	存:
+		sessionStorage.setItem('user', JSON.stringify(userEntity));
+	取:
+		var userJsonStr = sessionStorage.getItem('user');
+		userEntity = JSON.parse(userJsonStr);
+4.翻墙(拦登)
+
+5.splic()的使用:
+
+6.find()
+	js:array.find((item,index,array)=>{},this);
+	jq:div.find('span')
+	
+7.500:服务器报错
+
+8.unshift()向数组的开头添加一个或者更多元素(返回新的长度)
+	arr.unshift(new,....,n);
+9.push() 在数组的末尾添加一个或多个元素,返回数组新长度
+	arr.push(new...n)
+10.shift()用于把数组的第一个元素从其中删除
+	arr.shift();
+11.pop() 移除数组的最后一项,返回移除的项
+
+12.$.extend() 函数用于将一个或多个对象的内容合并到目标对象
+	如果多个对象具有相同的属性,则后者会覆盖前者的属性值;
+	$.extend([boolean],{},obj1,obj2)
+	
+
+
+
+
