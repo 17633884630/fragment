@@ -292,14 +292,50 @@ JQ中对于$符号的理解
                 this.data[this.index]
             );
             Vue.set(this.data,this.index,arr);
-
-            }
-
+			this.$global.appPermissionPermissionMoveUp(
+			this.dataone[this.move.index - 1].id
+			,d=>{
+				if(d.success){
+					
+				}
+			})
+            }esle{
+				this.$Message.info('已经到顶了');
+				return false;
+			}
         }else{
             this.$Message.info("请选择一条数据");
             return false;
         }
     }
+	下移：
+	movedown(){
+        if (this.selection.length == 1) {
+          var tag = this.move.index;
+          if (this.move.index < this.dataone.length - 1) {
+            var tempOption = this.dataone[this.move.index + 1];
+            Vue.set(
+              this.dataone,
+              this.move.index + 1,
+              this.dataone[this.move.index]
+            );
+            Vue.set(this.dataone, this.move.index, tempOption);
+            this.$global.appPermissionPermissionMoveDown(
+              this.dataone[this.move.index + 1].id,
+              d => {
+
+              }
+            );
+          } else {
+            this.$Message.info("已经到底了");
+            return false;
+          }
+          this.selection.length = 0;
+        } else {
+          this.$Message.info("请选择一条数据");
+          return false;
+        }
+    },
 
 
     

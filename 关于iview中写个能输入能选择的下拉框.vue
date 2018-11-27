@@ -59,3 +59,6 @@ export default {
   background: #f3f3f3;
 }
 </style>
+
+  
+//对于ztree树使用
