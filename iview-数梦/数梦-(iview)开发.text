@@ -362,46 +362,46 @@
 				}
 			mutations:
 				findMenu(state, d) {
-					var arr = [
-						{
-							code: "matterDirectory",
-							icon: "ios-home",
-							to: "/mattersDirectory",
+				var arr = [
+					{
+						code: "matterDirectory",
+						icon: "ios-home",
+						to: "/mattersDirectory",
+					},
+					{
+						icon: "ios-cog",
+						code: "matterManage",
+						children: [
+							{
+								to: "/view",
+								code: "matterDraft"
 							},
-						{
-							icon: "ios-cog",
-							code: "matterManage",
-							children: [
-								{
-									to: "/view",
-									code: "matterDraft"
-								},
-								.....
-							]
-						},
+							.....
+						]
+					},
 						......
 							
-						{
-							icon: "md-document",
-							code: "formDesign",
-							to: "http://101.132.137.159/form/",
-							target: "_blank",
-
-						},
-					]
-					$.each(d, (i, d) => {
-						$.each(arr, (j, b) => {
-							if(d.code == b.code) {
-								$.extend(true, d, b);
-							}
-						})
-					});
-					var d = JSON.stringify(d).replace(/name/g, "title");
-					var d = JSON.parse(d);
-					state.findMenu = d;
-						try {
-							localStorage.setItem('findMenu', JSON.stringify(d))
-						} catch(error) {}
-				},    
-
+					{
+						icon: "md-document",
+						code: "formDesign",
+						to: "http://101.132.137.159/form/",
+						target: "_blank",
+					},
+				]
+				$.each(d, (i, d) => {
+					$.each(arr, (j, b) => {
+						if(d.code == b.code) {
+							$.extend(true, d, b);
+						}
+					})
+				});
+				var d = JSON.stringify(d).replace(/name/g, "title");
+				var d = JSON.parse(d);
+				state.findMenu = d;
+					try {
+						localStorage.setItem('findMenu', JSON.stringify(d))
+					} catch(error) {}
+			},    
+	对于缓存数据(缓存到内存里面):
+		
 ---------------------------------------------------------------------------------------------------------------
