@@ -1,5 +1,4 @@
 知识点整理:
-
 	在iview中event是全局变量  event.preventDefault()   event.stopPropagation();
 	:not(:last-child) 不选择最后一个
 	在JQ $.ajax提交方式(拼接)可以使用$.param(data)
@@ -21,13 +20,6 @@
     	}
     vue中样式(关于对ui组件操作时)不起作用可能是style中加了作用域scoped
     	解决: .red >>> .uiclass
- 
----------------------------------------------------------------------------------------------
-
-常用代码片段:
-	
-	在iview中添加enter点击事件:   @keyup.enter.native = 'handleSubmit()'
-
 	vue+webpack中动态绑定图片路径的2种方法:
 		<img :src ="imgSrc" />
 		data(){
@@ -36,17 +28,19 @@
 	            imgSrc:require('...') 	//2
         	}
    		}
+ 
+---------------------------------------------------------------------------------------------
 
+常用代码片段:	
+	在iview中添加enter点击事件:   @keyup.enter.native = 'handleSubmit()'
    	关于开发常用跳转:
    		<router-link to="/home"></router-link>
    		this.$router.push('/home');
    		window.location.href = '/home';
    		window.open('/home');
    		<Button to="/home"></Button>
-
     在表格中(先设置 ref="selection")使用勾选框点击一行,勾选框勾选(iview)
     	this.$refs.selection.toggleSelect(index);
-
     跳转带参:
    		vuex:
    			 this.$store.state.data = data;
@@ -54,7 +48,6 @@
    		push:
    			 this.$router.push({path:'/home',query:{data:data}})
    			 data = this.$route.query.data
-
    	关于数据回填(勾选框)
    		<CheckboxGroup style="display: inline-block;" v-model="serviceThemesIds">
         	<Checkbox  v-for="item in formData.serviceThemes"  :label="item.id"  :key="item.name">{{item.name}}</Checkbox>
@@ -66,7 +59,6 @@
     	$.each(this.formData.serviceThemes,(i,d)=> {
         	this.serviceThemesIds.push(d.id)
    		});
-
    	下拉框默认选中第一项:
    		<Select placeholder="请选择" v-model="orgType">
         	<Option v-for="item in tissueTypes" :key="item.id" :value="item.id">{{item.name}}</Option>
@@ -74,7 +66,6 @@
     	orgType:null
     	数据处理(原理v-model双向数据绑定)
     	this.orgType = d[0].id
-
    	axios请求From提交:
    		配置路径:axios.defaults.baseURL = 'http://101.132.137.159:8800/api-user-center/';
    		var formData = new FormData();
@@ -90,7 +81,6 @@
    				.........
    			}
    		})
-
    	常用render函数
    		render: (h, params) => {
         	return h('sapn',params.row)  //这里的params.row能直接操作 h(div) params(data)
@@ -105,7 +95,6 @@
 -----------------------------------------------------------------------------------------------------------
 
 一些功能实现(源码):
-
 	表格中数据上移:
 		moveUp(){
 	        if(this.selection.length == 1){ //这地方是iview点击事件数组：
@@ -133,7 +122,6 @@
 	            return false;
 	        }
    		}
-
    	表格中数据下移:
    		movedown(){
 	        if (this.selection.length == 1) {
@@ -162,7 +150,6 @@
 	          return false;
 	        }
     	},
-
     在表格中在放一个表格:(iview)
     	使用on-expand:
     	....
@@ -189,11 +176,9 @@
 		        })
     		}
 
-
 ---------------------------------------------------------------------------------------------------------------
 
-关于一些用法的拓展:
-	
+关于一些用法的拓展:	
 	对于render的拓展:
 		render: (h, params) => {
         	return h("span", {
