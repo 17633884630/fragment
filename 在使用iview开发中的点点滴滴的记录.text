@@ -1,343 +1,418 @@
-在iview中event是全局变量
-     event.preventDefault();
-     event.stopPropagation();
+知识点整理:
 
-:not(:last-child) 不选择最后一个
+	在iview中event是全局变量  event.preventDefault()   event.stopPropagation();
+	:not(:last-child) 不选择最后一个
+	在JQ $.ajax提交方式(拼接)可以使用$.param(data)
+	$ 实际上就是一个函数 function
+	关于后台值处理
+		$.each(data,()=>{})
+		$.extend(true,d,data) 
+	关于数据处理
+		data:{}
+		data[id] = array
+		array = data[id]
+	在render函数中,绑定DOM属性(src,title...) 使用 domProps
+		render: (h,params) => {
+	        return h('a',{
+	            domProps:{
+	                title:params.row.name
+	            }
+	        },params.row.name)   
+    	}
+    vue中样式(关于对ui组件操作时)不起作用可能是style中加了作用域scoped
+    	解决: .red >>> .uiclass
+ 
+---------------------------------------------------------------------------------------------
 
-在JQ $.ajax提交方式(拼接)可以使用$.param(data)
+常用代码片段:
+	
+	在iview中添加enter点击事件:   @keyup.enter.native = 'handleSubmit()'
 
-在iview中添加enter点击事件
-    @keyup.enter.native = 'handleSubmit()'
+	vue+webpack中动态绑定图片路径的2种方法:
+		<img :src ="imgSrc" />
+		data(){
+      		return {
+	            imgSrc:'...' 			//1
+	            imgSrc:require('...') 	//2
+        	}
+   		}
 
-vue+webpack中动态绑定图片路径的2种方法:
-    <img :src ="imgSrc">
-    data(){
-        return {
-            imgSrc:'...' //1
-            imgSrc:require('...') //2
-        }
-    }
+   	关于开发常用跳转:
+   		<router-link to="/home"></router-link>
+   		this.$router.push('/home');
+   		window.location.href = '/home';
+   		window.open('/home');
+   		<Button to="/home"></Button>
 
-在开发中遇到的跳转传值(使用vuex传值)问题(数据)(新增,修改)
-    传:this.$router.push({
-        path:"...",
-        query:{
-            data:data
-        }
-    })
-    取:data = this.$route.query.data
-    传:this.$store.state.data = data;
-    取:data = this.$store.state.data 
-    
-    从后台拿到数据之后 {} 不一样可以使用
-       1. $.each(data,()=>{}) //id报错
-       2. $.extend(true,data,data) //对象拷贝
-       
-    这个数据在其他地方调用 可以采用 {}[] 方式
-        实例: 
-            data : {},
-        存:  data[id] = data;
-        取:  data[id]
-    开发中的跳转:
-        <router-link to="/mattersDirectory"></router-link>
-        this.$router.push('/myLogin');
-        window.location.href = '/myLogin'
-        window.open('/myLogin')
-        
-JQ中对于$符号的理解
-    $ 实际上就是一个函数 function
+    在表格中(先设置 ref="selection")使用勾选框点击一行,勾选框勾选(iview)
+    	this.$refs.selection.toggleSelect(index);
 
-在iview开发中使用表格,使用勾选框想点击一行 勾选框勾选 
-    iview 自带的有:
-    this.$refs.selection.toggleSelect(index);
-    需要在table 上设置 ref="selection" (自己设置)
+    跳转带参:
+   		vuex:
+   			 this.$store.state.data = data;
+   			 data = this.$store.state.data 
+   		push:
+   			 this.$router.push({path:'/home',query:{data:data}})
+   			 data = this.$route.query.data
 
-在ivie开发中使用勾选框,当查看,修改数据回填写法;
-    template中:
-    <CheckboxGroup style="display: inline-block;" v-model="serviceThemesIds">
-        <Checkbox  v-for="item in formData.serviceThemes"  :label="item.id"  :key="item.name">{{item.name}}</Checkbox>
-    </CheckboxGroup>
-    data数据:
-    data:{
-        serviceThemesIds:[]
-    }
-    从后端拿的数据进行编译(一)
-    $.each(this.formData.serviceThemes,(i,d)=> {
-        this.serviceThemesIds.push(d.id)
-    });
-    从后端拿的数据进行编译(二)
-    $.each(vThis.req, function(k, v) {
-        if ($.isArray(vThis.req[k])) { //勾选框回填
-            var arr = [];
-            $.each(d.data[k.replace("Id", "")], function(j, m) {
-                arr.push(m.id);
-            });
-            vThis.req[k] = arr;
-        } else if ($.isPlainObject(vThis.req[k])) {
-            vThis.req[k].id = (d.data[k] || { id: null }).id;
-        } else { //单选框回填
-            if ($.type(d.data[k]) === "boolean") {
-                vThis.req[k] = d.data[k] ? 1 : 0;
-            } else {
-                vThis.req[k] = d.data[k];
-            }
-        }
-    });
+   	关于数据回填(勾选框)
+   		<CheckboxGroup style="display: inline-block;" v-model="serviceThemesIds">
+        	<Checkbox  v-for="item in formData.serviceThemes"  :label="item.id"  :key="item.name">{{item.name}}</Checkbox>
+    	</CheckboxGroup>
+    	data:{
+        	serviceThemesIds:[]
+    	}
+    	进行数据编译
+    	$.each(this.formData.serviceThemes,(i,d)=> {
+        	this.serviceThemesIds.push(d.id)
+   		});
 
-在vue开发中提交方式为form表单提交(使用axios时)(一);
-    在main.js设置:
-    import qs from 'qs'   //转化
-    import axios from 'axios'
+   	下拉框默认选中第一项:
+   		<Select placeholder="请选择" v-model="orgType">
+        	<Option v-for="item in tissueTypes" :key="item.id" :value="item.id">{{item.name}}</Option>
+    	</Select>
+    	orgType:null
+    	数据处理(原理v-model双向数据绑定)
+    	this.orgType = d[0].id
 
-    Vue.prototype.$axios = axios
-    Vue.prototype.$qs = qs
+   	axios请求From提交:
+   		配置路径:axios.defaults.baseURL = 'http://101.132.137.159:8800/api-user-center/';
+   		var formData = new FormData();
+   		formData.append('data',data)
+   		const cofig = {
+   			headers:{
+   				"Content-Type": "multipart/form-data"
+   			}
+   		}
+   		axios.post('/url',formData,cofig).then((d)=>{			// 原始
+   		this.$axios.post('/url',formData,cofig).then((d)=>{		// Vue.prototype.$axios = axios;
+   			if(d.data.success){
+   				.........
+   			}
+   		})
 
-    在请求过程中:
-    var vThis = this;
-    使用(一)(使用插件)
-    vThis.$axios.post(url,
-     vThis.$qs.stringify({
-          name: vThis.name,
-     })
-     ).then(function(response) {});
-     }).catch(() => {})
-    使用(二)(不用插件)
-    var formData = new FormData();
-	formData.append("id", vThis.id);
-    formData.append("name", vThis.name);
-	var config = {
-		headers: {
-		    "Content-Type": "multipart/form-data"
+   	常用render函数
+   		render: (h, params) => {
+        	return h('sapn',params.row)  //这里的params.row能直接操作 h(div) params(data)
+    	}
+    	render: (h, params) => {
+        	return h('sapn',params.row.time ? params.row.time.substring(0,10) : '' )  //时间
+    	}
+    	render: (h, params) => {
+        	return h('sapn',params.row.isBool = true ? '是' : '否' )  //Boolean
+    	}
+
+-----------------------------------------------------------------------------------------------------------
+
+一些功能实现(源码):
+
+	表格中数据上移:
+		moveUp(){
+	        if(this.selection.length == 1){ //这地方是iview点击事件数组：
+	            if(this.index > 0){ //点击那行的index
+	            var arr = this.data[this.index - 1]; //this.data是表格数据的数组
+	            Vue.set(
+	                this.data,
+	                this.index - 1,
+	                this.data[this.index]
+	            );
+	            Vue.set(this.data,this.index,arr);
+				this.$global.appPermissionPermissionMoveUp(
+				this.dataone[this.move.index - 1].id
+				,d=>{
+					if(d.success){
+						
+					}
+				})
+	            }esle{
+					this.$Message.info('已经到顶了');
+					return false;
+				}
+	        }else{
+	            this.$Message.info("请选择一条数据");
+	            return false;
+	        }
+   		}
+
+   	表格中数据下移:
+   		movedown(){
+	        if (this.selection.length == 1) {
+	          var tag = this.move.index;
+	          if (this.move.index < this.dataone.length - 1) {
+	            var tempOption = this.dataone[this.move.index + 1];
+	            Vue.set(
+	              this.dataone,
+	              this.move.index + 1,
+	              this.dataone[this.move.index]
+	            );
+	            Vue.set(this.dataone, this.move.index, tempOption);
+	            this.$global.appPermissionPermissionMoveDown(
+	              this.dataone[this.move.index + 1].id,
+	              d => {
+
+	              }
+	            );
+	          } else {
+	            this.$Message.info("已经到底了");
+	            return false;
+	          }
+	          this.selection.length = 0;
+	        } else {
+	          this.$Message.info("请选择一条数据");
+	          return false;
+	        }
+    	},
+
+    在表格中在放一个表格:(iview)
+    	使用on-expand:
+    	....
+    	对于数据处理:
+    		childData:{}
+    	在render中:
+    		render: (h, params) => {
+    			if (!this.childData[params.row.id]){
+			        $.ajax({
+			            async:false, //必须同步
+			            ...
+			            success:function(res){
+			            	if(res.success){
+			            		this.childData[params.row.id] = res.data
+			            	}
+			            }
+			        })
+			    }
+		        return h('Table',{
+		            props:{
+		                columns:this.columns,
+		                data:this.childData[params.row.id]
+		            }
+		        })
+    		}
+
+
+---------------------------------------------------------------------------------------------------------------
+
+关于一些用法的拓展:
+	
+	对于render的拓展:
+		render: (h, params) => {
+        	return h("span", {
+	            props:{
+	                columns:this.columns,
+	            }, 
+	            style:{
+	                fontSize: '14px'
+	            },   
+	            class: "demo-spin-icon-load",//1
+	            class: "red black" //2 
+	            class: {
+	                "red" : true,
+	                "black" : true
+	            }
+	            on:{
+	                click: () => {
+	                    ...
+	                }
+	            }
+    	    },params.row.name);
+    	}
+    在render中嵌套其他元素:
+    	render:(h,params)=>{
+	     	return h('div',{
+	            style:{
+	                background:'#ccc'
+	            }
+	         },[
+	             h('p','内容2')
+	         ],'内容1')
+    	}
+    在render中3层嵌套:
+    	render:(h, params) => {
+	        return h('div',[
+	            h('div',{
+	                style:{}
+	                },[h('p','内容2')]),
+	            h('div',{
+	                style:{}
+	                },[h('p','内容2')])
+	        ])
 		}
-	};
-	vThis.$axios.post(url,formData ,config).then(function(response) {});
+	axios使用from提交(可用 qs )(在vue中使用:)
+		main.js
+			import axios from 'axios'
+			import qs from 'qs'   //转化
 
-在vue开发过程中使用ajax请求(封装ajax);
-    在config-dev.env.js中:
+			Vue.prototype.$axios = axios
+    		Vue.prototype.$qs = qs
+
+    	使用:
+    		this.$axios.post(url,this.$qs.stringify({
+		          name: this.name,
+		    })
+		    ).then(function(response) {});
+		    }).catch(() => {}) 
+	数据回填(勾选,单选,上传,ids):
+		$.each(vThis.req, function(k, v) {
+	        if ($.isArray(vThis.req[k])) { //勾选框回填
+	            var arr = [];
+	            $.each(d.data[k.replace("Id", "")], function(j, m) {
+	                arr.push(m.id);
+	            });
+	            vThis.req[k] = arr;
+	        } else if ($.isPlainObject(vThis.req[k])) {
+	            vThis.req[k].id = (d.data[k] || { id: null }).id;
+	        } else { //单选框回填
+	            if ($.type(d.data[k]) === "boolean") {
+	                vThis.req[k] = d.data[k] ? 1 : 0;
+	            } else {
+	                vThis.req[k] = d.data[k];
+	            }
+	        }
+    	});
+    关于ajax请求(封装):
+    	在main.js中引入使用
+	        import global from './global'
+	        Vue.config.productionTip = false
+	        Vue.prototype.$global = global
+	    在config-dev.env.js中:
         module.exports = merge(prodEnv, {
             NODE_ENV: '"development"',
             TYPE: '"dev"' //新加
         })
-    在config-prod.env.js中:
-        let type = process.argv.splice(2)[0] || 'prod'; //新加
-        module.exports = {
-            NODE_ENV: '"production"',
-            TYPE: '"'+type+'"' //新加
-        }
-    在src下创建一个global文件夹,新增index.js:
-        const config = {
-            dev: {  //开发环境
-                ip: '', //'localhost'
-                post: '',
-                title: '',
-            },
-            prod: { //测试环境
-                ip: '',
-                post: '',
-                title: '',
-            },
-        };
-    const url = "http://" + config[process.env.TYPE].ip + ":" + config[process.env.TYPE].post + "/网关"
-    const title = config[process.env.TYPE].title
-    export default {
-        getUrl(append) {
-            return url + (append || '');
-        },
-        ajax(type, api, data, callback, jsonUp) {
-            if ($.isFunction(data)) {
-            jsonUp = jsonUp || callback;
-            callback = data;
-            data = undefined;
-            }
-            callback = callback || function (d) {};
-            var option = {
-            type: type,
-            url: url + api,
-            success: callback
-            };
-            if (data) {
-            option.data = data;
-            if (jsonUp) {
-                option.contentType = "application/json";
-                option.data = JSON.stringify(data);
-            }
-            }
-            $.ajax(option);
-        },
-        //使用:
-        get: function (id, callback) {
-            this.ajaxGet('url', {
-            id: id
-            }, callback);
-        },
-        post: function (data, callback) {
-            this.ajaxPost('url', data, callback, true);
-        },
-    }
-    在main.js中引入使用
-        import global from './global'
-        Vue.config.productionTip = false
-        Vue.prototype.$global = global
-
-在vue中,下拉框默认选中第一项：
-    利用v-model：
-    代码：
-    <Select placeholder="请选择" v-model="orgType">
-        <Option v-for="item in tissueTypes" :key="item.id" :value="item.id">{{item.name}}</Option>
-    </Select>
-    data:
-         orgType : null
-    success:
-         this.orgType = d.data[0].id
-         
-在使用render 绑定DOM属性 使用 domProps;
-    例如:img中的src属性
-        a链接中的title属性
-    render: (h,params) => {
-        return h('a',{
-            domProps:{
-                title:params.row.name
-            }
-        },params.row.name)   
-    }
-绑定组件属性使用props;
-
-在render中
-    render: (h, params) => {
-        return h("span", {
-            props:{
-                columns:this.columns,
-            }, 
-            style:{
-                fontSize: '14px'
-            },   
-            class: "demo-spin-icon-load",//1
-            class: "red black" //2 
-            class: {
-                "red" : true,
-                "black" : true
-            }
-            on:{
-                click: () => {
-                    ...
-                }
-            }
-        },params.row.name);
-    }
-注意  这里的style是不加作用域scoped的，如果加了class样式就不生效了
-如果在scoped中使用组件自带的类名可以  .red >>> .demo-spin-icon-load
-
-(需求:在iview中表格on-expand中在放入一个表格,关于对data数组的操作)
-在render中使用 (async:false)
-    在data中:data:{},
-    在render: (h, params) => {
-        $.ajax({
-            async:false,
-            ...
-        })
-        return h('Table',{
-            props:{
-                columns:this.columns,
-                data:this.data[params.row.id]
-            }
-        })
-    }
-
-在使用render中能简写:
-    render: (h, params) => {
-        return h('sapn',params.row)  //这里的params.row能直接操作 h(div) params(data)
-    }
-    注:在params.row 直接可以进行操作元素;
-
-在render中嵌套其他元素:
-    render:(h,params)=>{
-     return h('div',
-        {
-            style:{
-                background:'#ccc'
-            }
-         },[
-             h('p','内容2')
-         ],'内容1')
-    }
-
-在render中3层嵌套:
-    render:(h, params) => {
-        return h('div',[
-            h('div',{
-                style:{}
-                },[h('p','内容2')]),
-            h('div',{
-                style:{}
-                },[h('p','内容2')])
-        ])
-}
-常用的render方法：
-    render: (h, params) => {
-        return h(
-            "span",
-            params.row.applicationType ? params.row.applicationType.name : ""
-        );
-    }
-
-在iview表格中实现上移，下移：
-    上移：
-    moveUp(){
-        if(this.selection.length == 1){ //这地方是iview点击事件数组：
-            if(this.index > 0){ //点击那行的index
-            var arr = this.data[this.index - 1]; //this.data是表格数据的数组
-            Vue.set(
-                this.data,
-                this.index - 1,
-                this.data[this.index]
-            );
-            Vue.set(this.data,this.index,arr);
-			this.$global.appPermissionPermissionMoveUp(
-			this.dataone[this.move.index - 1].id
-			,d=>{
-				if(d.success){
-					
+	    在config-prod.env.js中:
+	        let type = process.argv.splice(2)[0] || 'prod'; //新加
+	        module.exports = {
+	            NODE_ENV: '"production"',
+	            TYPE: '"'+type+'"' //新加
+	        }
+	    在src下创建一个global文件夹,新增index.js:
+	        const config = {
+	            dev: {  //开发环境
+	                ip: '', //'localhost'
+	                post: '',
+	                title: '',
+	            },
+	            prod: { //测试环境
+	                ip: '',
+	                post: '',
+	                title: '',
+	            },
+	        };
+	    const url = "http://" + config[process.env.TYPE].ip + ":" + config[process.env.TYPE].post + "/网关"
+	    const title = config[process.env.TYPE].title
+	    export default {
+	        getUrl(append) {
+	            return url + (append || '');
+	        },
+	        ajax(type, api, data, callback, jsonUp) {
+	            if ($.isFunction(data)) {
+		            jsonUp = jsonUp || callback;
+		            callback = data;
+		            data = undefined;
+	            }
+	            callback = callback || function (d) {};
+	            var option = {
+		            type: type,
+		            url: url + api,
+		            success: callback  // beforeSend,
+		            //这段如果全局拦截不用加
+		            beforeSend: (request) => {
+        				if (Cookies.getJSON("token")) {  //js-cookie
+			          		var access_token = Cookies.getJSON("token").access_token;
+			          		request.setRequestHeader("Authorization", "Bearer " + access_token)
+        				}
+        			}      
+	            };
+	            if (data) {
+	            	option.data = data;
+	           		if (jsonUp) {
+		                option.contentType = "application/json";
+		                option.data = JSON.stringify(data);
+	            	}
+	            }
+	            $.ajax(option);
+	        },
+	        //使用:
+	        get: function (id, callback) {
+	            this.ajaxGet('url', {
+	            id: id
+	            }, callback);
+	        },
+	        post: function (data, callback) {
+	            this.ajaxPost('url', data, callback, true); //true json提交
+	        },
+	    }
+	菜单权限(iview从后台拿数据展示);
+    	<template v-for='(item,i) in menus'>
+			<Submenu v-if="item.children && item.children.length>0" :name='i' :key='i'>
+				<template slot="title">
+					<Icon :type='item.icon' /><span>{{item.title}}</span></template>
+					<MenuItem v-for='(it,j) in item.children' :name='i + "-" + j' :to='it.to' :key='i + "-" + j'>
+						<span>{{it.title}}</span>
+					</MenuItem>
+			</Submenu>
+			<MenuItem v-else :name='i' :to="item.to" :target="item.target">
+				<Icon :type='item.icon'></Icon>
+				<span>{{item.title}}</span>
+			</MenuItem>
+		</template>
+		this.menus = this.list
+		vuex:
+			export(之上):
+			try {
+				var user = localStorage.getItem('findMenu');
+					if(user) {
+						var findMenu = JSON.parse(user);
 				}
-			})
-            }esle{
-				this.$Message.info('已经到顶了');
-				return false;
-			}
-        }else{
-            this.$Message.info("请选择一条数据");
-            return false;
-        }
-    }
-	下移：
-	movedown(){
-        if (this.selection.length == 1) {
-          var tag = this.move.index;
-          if (this.move.index < this.dataone.length - 1) {
-            var tempOption = this.dataone[this.move.index + 1];
-            Vue.set(
-              this.dataone,
-              this.move.index + 1,
-              this.dataone[this.move.index]
-            );
-            Vue.set(this.dataone, this.move.index, tempOption);
-            this.$global.appPermissionPermissionMoveDown(
-              this.dataone[this.move.index + 1].id,
-              d => {
+			} catch(e) {}
+			state:
+				findMenu: findMenu
+			getters:
+				findMenu(state, getters) {
+					return state;
+				}
+			mutations:
+				findMenu(state, d) {
+					var arr = [
+						{
+							code: "matterDirectory",
+							icon: "ios-home",
+							to: "/mattersDirectory",
+							},
+						{
+							icon: "ios-cog",
+							code: "matterManage",
+							children: [
+								{
+									to: "/view",
+									code: "matterDraft"
+								},
+								.....
+							]
+						},
+						......
+							
+						{
+							icon: "md-document",
+							code: "formDesign",
+							to: "http://101.132.137.159/form/",
+							target: "_blank",
 
-              }
-            );
-          } else {
-            this.$Message.info("已经到底了");
-            return false;
-          }
-          this.selection.length = 0;
-        } else {
-          this.$Message.info("请选择一条数据");
-          return false;
-        }
-    },
+						},
+					]
+					$.each(d, (i, d) => {
+						$.each(arr, (j, b) => {
+							if(d.code == b.code) {
+								$.extend(true, d, b);
+							}
+						})
+					});
+					var d = JSON.stringify(d).replace(/name/g, "title");
+					var d = JSON.parse(d);
+					state.findMenu = d;
+						try {
+							localStorage.setItem('findMenu', JSON.stringify(d))
+						} catch(error) {}
+				},    
 
-
-    
-
-
+---------------------------------------------------------------------------------------------------------------
