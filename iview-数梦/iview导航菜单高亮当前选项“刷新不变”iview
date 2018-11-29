@@ -1,0 +1,63 @@
+在iview中显示高亮效果,
+    https://www.jianshu.com/p/5f239ce7643b(使用路由判断的);
+结合上面的自己写个适合自己项目的(写的不好,欢迎指教,你的指教就是我的进步,谢谢!!!)
+template
+<Sider breakpoint="md" ref="sider_v" hide-trigger collapsible :collapsed-width="78" :style="{minWidth:swidth + 'px',width:swidth + 'px',maxWidth:swidth + 'px',height:elHeight + 'px',overflow:'auto'}" v-model="isCollapsed">
+      <Menu width="auto" :active-name="activemenu" @on-select="selectName" :open-names='openmenu'  :accordion="true">
+            <template v-for='(item,i) in menus'>
+                   <Submenu v-if="item.children && item.children.length > 0" :name='i' :key='i'>
+                           <template slot="title">
+                                  <Icon :type='item.icon' />
+                                  <span>{{item.title}}</span>
+                           </template>
+                           <MenuItem v-for='(it,j) in item.children' :name='i + "-" + j' :to='it.to' :key='i + "-" + j'>
+                                  <span>{{it.title}}</span>
+                           </MenuItem>
+                   </Submenu>
+                   <MenuItem v-else :name='i' :to="item.to" :target="item.target">
+                           <Icon :type='item.icon'></Icon>
+                           <span>{{item.title}}</span>
+                   </MenuItem>
+             </template>
+       </Menu>
+ </Sider>
+data:
+
+export default{
+    data(){
+       return{
+            menus: [],  //菜单列表...
+            activemenu:0,
+            selectMenu:null,
+            openmenu:[]
+       }
+    },
+    methods:{
+            selectName(name){ //iview方法(返回name 上面的name 父级0 子级 0 - 1 形式
+                localStorage.setItem('selectMenu',name);
+                var openName; //父级需要处理 name 不放回父级    
+                if(name == 0){  //因为没有子级的只有一个就直接判断了
+                     openName = 0;
+                }else{
+                     openName =  name.charAt(0); //name都是子级 1 - 1  获取 1(字符串)
+                }
+                localStorage.setItem('openName',openName);
+            }   
+    },
+    created(){
+        var selectMenu =  localStorage.getItem('selectMenu');
+        var openName =  parseInt(localStorage.getItem('openName')); //因为openmenu值需要数字
+        if(selectMenu == 0 || selectMenu == null){ //初始进来为null
+              this.activemenu = 0
+         }else{
+              this.openmenu.push(openName);
+              this.activemenu = selectMenu;                                   
+         }    
+    }
+}
+
+在如果有用户话把localStorage清空就行了!!!
+思路直接操作iview中 active-name open-names 的值 刷新直接把值放到缓存中,刷新之后取出来就行
+
+写的不好,欢迎指导!!!你的指导就是我的进步,谢谢!!!
+
