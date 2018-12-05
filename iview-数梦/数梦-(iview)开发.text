@@ -1,7 +1,7 @@
 知识点整理:
 	在iview中event是全局变量  event.preventDefault()   event.stopPropagation();
 	:not(:last-child) 不选择最后一个
-	在JQ $.ajax提交方式(拼接)可以使用$.param(data)
+	在JQ $.ajax提交方式(拼接)可以使用$.param(data) (get方式)
 	$ 实际上就是一个函数 function
 	关于后台值处理
 		$.each(data,()=>{})
@@ -46,8 +46,11 @@
    			 this.$store.state.data = data;
    			 data = this.$store.state.data 
    		push:
-   			 this.$router.push({path:'/home',query:{data:data}})
-   			 data = this.$route.query.data
+   			 this.$router.push({path:'/home',query:{data:data}}) //这种会在链接上显示
+				 data = this.$route.query.data
+
+				 this.$router.push({name:'/home',params:{data:data}}) //这种不会在链接上显示
+   			 data = this.$route.params.data
    	关于数据回填(勾选框)
    		<CheckboxGroup style="display: inline-block;" v-model="serviceThemesIds">
         	<Checkbox  v-for="item in formData.serviceThemes"  :label="item.id"  :key="item.name">{{item.name}}</Checkbox>

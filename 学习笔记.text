@@ -69,7 +69,41 @@
 12.$.extend() 函数用于将一个或多个对象的内容合并到目标对象
 	如果多个对象具有相同的属性,则后者会覆盖前者的属性值;
 	$.extend([boolean],{},obj1,obj2)
-	
+13.JSON是一种key/value形式的数据格式 JSONP则是一种跨域数据交互协议
+14.Js判断:
+	if()
+	a ? b : c
+	switch (n) {
+		case 0:
+			...
+			break;
+		case 1:
+			...
+			break;
+		...
+		default:
+			n 与 case 0 和 case 1 ... 不同时执行的代码
+	}
+15.Js循环
+	while (n > 0){
+		...
+	}
+	do{
+		...
+	}while(n > 0)
+	for(var i = 0 ;i < length;i++){
+		...
+	}
+	for ( keys in obj){ //主要用于遍历对象
+		... 
+	}
+	for ( let  k of arr ){
+		...
+	}
+	array.map((v,i,arr)=>{},this) // 返回一个新数组
+	$.each()
+	array.forEach(function(currentValue, index, arr), thisValue)
+
 
 
 

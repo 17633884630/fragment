@@ -1,0 +1,8 @@
+对于cookie操作:
+	js-cookie:
+		获取所有cookie:	cookie.get()
+	vue-cookies:
+		获取所有cookie:	
+			this.$cookies.keys()	返回:数组
+		删除:
+			this.$cookies.remove(keyName [, path [, domain]]) 
