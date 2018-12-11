@@ -103,8 +103,8 @@
 	array.map((v,i,arr)=>{},this) // 返回一个新数组
 	$.each()
 	array.forEach(function(currentValue, index, arr), thisValue)
-
-
-
-
-
+16.js动态添加删除点击事件
+	$(this).attr('onclick',"test()");
+   	$(this).removeAttr(attribute)	//删除事件
+   	$(this).removeAttr("onclick")   //删除属性
+	//如果添加点击事件不起效果,可以先$(this).attr('onclick','')下;
