@@ -1,42 +1,60 @@
 <!DOCTYPE html>
 <html>
+
 	<head>
 		<title>artTemplate js和html模板分离</title>
-		<meta charset="UTF-8"/>
-		<script src="jquery.min.js"></script>	
-		<script src="template-web.js" ></script>
+		<meta charset="UTF-8" />
+		<script src="jquery.min.js"></script>
+		<script src="template-web.js"></script>
 	</head>
+
 	<body>
 		<div id="content"></div>
 	</body>
+
 </html>
 <script>
-	$(function(){
+	$(function() {
 		var obj = {
-	    	title: '标签1',
-	    	list: ['文艺', '博客', '摄影', '电影', '民谣', '旅行', '吉他'],
-	    	isAdmin:true
-		};		
-		var html = $.get('test.html',function (data) {
-			
-			var source = data.getElementById('test'); //获取文件 -->获取文件中的一个模板
-			
-	   		var render = template.compile(source.innerHTML);  //-->template.compile(data) data -->字符串
+			title: '标签1',
+			list: ['文艺', '博客', '摄影', '电影', '民谣', '旅行', '吉他'],
+			isAdmin: true
+		};
+		var html = $.get('test.html', function(data) {
 
-	    	document.getElementById('content').innerHTML = render(obj); //render()将返回渲染结果。
+			//var source = data.getElementById('test'); //获取文件 -->获取文件中的一个模板
+
+			//var render = template.compile(source.innerHTML);  //-->template.compile(data) data -->字符串
+
+			//document.getElementById('content').innerHTML = render(obj); //render()将返回渲染结果。
+
+			--上面的只适合火狐--下面适合谷歌--ajax 可以指定返回值(但是我尝试)
+			var render = template.compile(data);
+			document.getElementById('content').innerHTML = render(obj);
+
+			原因: 在谷歌下 ajax不设置返回值是字符串, 而火狐是对象
+
+			解决办法: dataType : "html" 
+			var html = $.get(
+				'3.html',
+				function(data) {
+					var render = template.compile(data);
+					document.getElementById('content').innerHTML = render(obj);
+				},
+				"html"
+			)
 		})
 	})
 </script>
 
-
 test.html 文件中:
 <script id="test" type="text/html">
- {{if isAdmin}}
+	{{if isAdmin}}
 	<h1>{{title}}</h1>
 	<ul>
 		{{each list as value i}}
 		<li>索引 {{i + 1}} ：{{value}}</li>
 		{{/each}}
 	</ul>
-{{/if}}
+	{{/if}}
 </script>
